@@ -51,11 +51,6 @@ public class CategoryController {
         try {
             Category updatedCategory = categoryService.updateCategory(category, categoryId);
             return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return ResponseEntity
-                    .status(e.getStatusCode())
-                    .body(Map.of("message", errorMessage, "status", e.getStatus().value()));
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
