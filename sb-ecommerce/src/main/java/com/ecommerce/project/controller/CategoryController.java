@@ -1,8 +1,10 @@
 package com.ecommerce.project.controller;
 
 
+import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +31,7 @@ public class CategoryController {
 
 
     @PostMapping("api/public/categories")
-    public ResponseEntity<Category> createCategory(@RequestBody Category category){
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category){
         Category category1 = categoryService.createCategory(category);
         return new ResponseEntity<>(category1, HttpStatus.CREATED);
     }
@@ -37,23 +39,14 @@ public class CategoryController {
 
     @DeleteMapping("api/admin/categories/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId){
-        try{
             String s = categoryService.deleteCategory(categoryId);
-//            return new ResponseEntity<>(s, HttpStatus.OK);
-            return ResponseEntity.ok(s);
-        }catch (ResponseStatusException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+            return new ResponseEntity<>(s, HttpStatus.OK);
     }
 
     @RequestMapping(value = "api/admin/categories/{categoryId}", method = RequestMethod.PUT)
     public ResponseEntity<Category> updateCategory(@RequestBody Category category, @PathVariable Long categoryId) {
-        try {
             Category updatedCategory = categoryService.updateCategory(category, categoryId);
             return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
 
